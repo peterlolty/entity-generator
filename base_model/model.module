@@ -5,8 +5,9 @@
  * Module for the Model Entity.
  */
 
+include_once 'model.menu.inc';
 include_once 'model.features.inc';
-include_once 'includes/views/model.views.inc';
+include_once 'model.views.inc';
 
 %HOOKS%
 
@@ -14,21 +15,22 @@ include_once 'includes/views/model.views.inc';
  * Implements hook_entity_info().
  */
 function model_entity_info() {
-  $return['modelentity'] = array(
+  $return['model_modelentity'] = array(
     'label'             => t('ELabel'),
     'plural label'      => t('ELabels'),
     // The entity class and controller class extend the classes provided by the
     // Entity API.
     'entity class'      => 'Modelentity',
     'controller class'  => 'ModelentityController',
-    'base table'        => 'modelentity',
+    'metadata controller class' => 'ModelentityMetadataController',
+    'base table'        => 'model_modelentity',
     'fieldable'         => TRUE,
     'entity keys'       => array(
-      'id'     => 'modelentity_id',
+      'id'     => 'model_modelentity_id',
       'bundle' => 'type',
       'label'  => 'name',
     ),
-    // Bundles are defined by the modelentity types below.
+    // Bundles are defined by the model_modelentity types below.
     'bundles'           => array(),
     // Bundle keys tell the FieldAPI how to extract information from the
     // bundle objects.
@@ -37,16 +39,16 @@ function model_entity_info() {
     ),
     'label callback'    => 'entity_class_label',
     'uri callback'      => 'entity_class_uri',
-    'creation callback' => 'modelentity_create',
-    'access callback'   => 'modelentity_access',
+    'creation callback' => 'model_modelentity_create',
+    'access callback'   => 'model_modelentity_access',
     'module'            => 'model',
     // The information below is used by the ModelentityUIController
     // (which extends the EntityDefaultUIController).
     'admin ui'          => array(
-      'path'             => 'admin/content/modelentities',
-      'file'             => 'model_modelentity.admin.inc',
+      'path'             => 'model/modelentities',
+      'file'             => 'includes/model_modelentity.admin.inc',
       'controller class' => 'ModelentityUIController',
-      'menu wildcard'    => '%modelentity',
+      'menu wildcard'    => '%model_modelentity',
     ),
     'inline entity form' => array(
       'controller' => 'ModelentityInlineEntityFormController'
@@ -54,26 +56,26 @@ function model_entity_info() {
   );
 
   // The entity that holds information about the entity types.
-  $return['modelentity_type'] = array(
+  $return['model_modelentity_type'] = array(
     'label'            => t('ELabel type'),
     'plural label'     => t('ELabel types'),
     'entity class'     => 'ModelentityType',
     'controller class' => 'ModelentityTypeController',
-    'base table'       => 'modelentity_type',
+    'base table'       => 'model_modelentity_type',
     'fieldable'        => FALSE,
-    'bundle of'        => 'modelentity',
+    'bundle of'        => 'model_modelentity',
     'exportable'       => TRUE,
     'entity keys'      => array(
       'id'    => 'id',
       'name'  => 'type',
       'label' => 'label',
     ),
-    'access callback'  => 'modelentity_type_access',
+    'access callback'  => 'model_modelentity_type_access',
     'module'           => 'model',
     // Enable the entity API's admin UI.
     'admin ui'         => array(
-      'path'             => 'admin/structure/modelentity_types',
-      'file'             => 'model_modelentity_type.admin.inc',
+      'path'             => 'admin/structure/model/modelentity_types',
+      'file'             => 'includes/model_modelentity_type.admin.inc',
       'controller class' => 'ModelentityTypeUIController',
     ),
   );
@@ -84,21 +86,21 @@ function model_entity_info() {
 /**
  * Implements hook_entity_info_alter().
  *
- * We are adding the info about the modelentity types via a hook to avoid
- * a recursion issue as loading the modelentity types requires the entity
+ * We are adding the info about the model_modelentity types via a hook to avoid
+ * a recursion issue as loading the model_modelentity types requires the entity
  * info as well.
  *
  * @todo This needs to be improved
  */
 function model_entity_info_alter(&$entity_info) {
-  foreach (modelentity_get_types() as $type => $info) {
-    $entity_info['modelentity']['bundles'][$type] = array(
+  foreach (model_modelentity_get_types() as $type => $info) {
+    $entity_info['model_modelentity']['bundles'][$type] = array(
       'label' => $info->label,
       'admin' => array(
-        'path'             => 'admin/structure/modelentity_types/manage/%modelentity_type',
-        'real path'        => 'admin/structure/modelentity_types/manage/' . $type,
-        'bundle argument'  => 4,
-        'access arguments' => array('administer modelentity types'),
+        'path'             => 'admin/structure/model/modelentity_types/manage/%model_modelentity_type',
+        'real path'        => 'admin/structure/model/modelentity_types/manage/' . $type,
+        'bundle argument'  => 5,
+        'access callback'  => 'model_modelentity_type_access',
       ),
     );
   }
@@ -111,34 +113,50 @@ function model_permission() {
   // We set up permisssions to manage entity types, manage all entities and the
   // permissions for each individual entity.
   $permissions = array(
-    'administer modelentity types' => array(
-      'title'       => t('Administer modelentity types'),
-      'description' => t('Create and delete fields for modelentity types, and set their permissions.'),
+    'access model' => array(
+      'title'       => t('Access module_name'),
+      'description' => t('Access module_name, manage items, etc.'),
     ),
-    'administer modelentities'     => array(
-      'title'       => t('Administer modelentities'),
-      'description' => t('Edit and delete all modelentities'),
+    'access model administration' => array(
+      'title'       => t('Access module_name Administration'),
+      'description' => t('Access module_name administration, manage settings, types, etc.'),
+    ),
+    'administer model model_modelentity types' => array(
+      'title'       => t('Administer ELabel types'),
+      'description' => t('Create and delete fields for ELabel types.'),
+      'restrict access' => TRUE,
+    ),
+    'administer model model_modelentities'     => array(
+      'title'       => t('Administer ELabels'),
+      'description' => t('Edit and delete all ELabels'),
+      'restrict access' => TRUE,
     ),
   );
 
-  // Generate permissions per modelentity.
-  foreach (modelentity_get_types() as $type) {
+  // Generate permissions per model_modelentity.
+  foreach (model_modelentity_get_types() as $type) {
     $type_name = check_plain($type->type);
     $permissions += array(
-      "edit any $type_name modelentity"   => array(
-        'title' => t('%type_name: Edit any modelentity', array('%type_name' => $type->label)),
+      "create any model $type_name model_modelentity"   => array(
+        'title' => t('%type_name: Create ELabel', array('%type_name' => $type->label)),
       ),
-      "view any $type_name modelentity"   => array(
-        'title' => t('%type_name: View any modelentity', array('%type_name' => $type->label)),
+      "view any model $type_name model_modelentity"   => array(
+        'title' => t('%type_name: View any ELabel', array('%type_name' => $type->label)),
       ),
-      "view own $type_name modelentity"   => array(
-        'title' => t('%type_name: View own modelentity', array('%type_name' => $type->label)),
+      "edit any model $type_name model_modelentity"   => array(
+        'title' => t('%type_name: Edit any ELabel', array('%type_name' => $type->label)),
       ),
-      "edit own $type_name modelentity"   => array(
-        'title' => t('%type_name: Edit own modelentity', array('%type_name' => $type->label)),
+      "delete any model $type_name model_modelentity" => array(
+        'title' => t('%type_name: Delete any ELabel', array('%type_name' => $type->label)),
       ),
-      "delete own $type_name modelentity" => array(
-        'title' => t('%type_name: Delete own modelentity', array('%type_name' => $type->label)),
+      "view own model $type_name model_modelentity"   => array(
+        'title' => t('%type_name: View own ELabel', array('%type_name' => $type->label)),
+      ),
+      "edit own model $type_name model_modelentity"   => array(
+        'title' => t('%type_name: Edit own ELabel', array('%type_name' => $type->label)),
+      ),
+      "delete own model $type_name model_modelentity" => array(
+        'title' => t('%type_name: Delete own ELabel', array('%type_name' => $type->label)),
       ),
     );
   }
@@ -147,13 +165,29 @@ function model_permission() {
 }
 
 /**
+ * Implements hook_theme().
+ */
+function model_theme() {
+  return array(
+    'model_modelentity_add_list' => array(
+      'variables' => array('content' => array()),
+      'file'      => 'includes/model_modelentity.admin.inc',
+    ),
+    'model_modelentity'          => array(
+      'render element' => 'elements',
+      'template'       => 'templates/entities/model_modelentity',
+    ),
+  );
+}
+
+/**
  * Implements hook_menu_local_tasks_alter().
  */
 function model_menu_local_tasks_alter(&$data, $router_item, $root_path) {
-  // Add action link 'admin/structure/modelentities/add'
-  // on 'admin/structure/modelentities'.
-  if ($root_path == 'admin/content/modelentities') {
-    $item = menu_get_item('admin/content/modelentities/add');
+  // Add action link 'admin/structure/model_modelentities/add'
+  // on 'admin/structure/model_modelentities'.
+  if ($root_path == 'model/modelentities') {
+    $item = menu_get_item('model/modelentities/add');
     if ($item['access']) {
       $data['actions']['output'][] = array(
         '#theme' => 'menu_local_action',
@@ -163,246 +197,4 @@ function model_menu_local_tasks_alter(&$data, $router_item, $root_path) {
   }
 }
 
-/**
- * Implements hook_theme().
- */
-function model_theme() {
-  return array(
-    'modelentity_add_list' => array(
-      'variables' => array('content' => array()),
-      'file'      => 'model_modelentity.admin.inc',
-    ),
-    'modelentity'          => array(
-      'render element' => 'elements',
-      'template'       => 'templates/entities/modelentity',
-    ),
-  );
-}
-
-/**
- * Determines whether the given user has access to a modelentity.
- *
- * @param string $op
- *   The operation being performed. One of 'view', 'update', 'create', 'delete'
- *   or just 'edit' (being the same as 'create' or 'update').
- * @param object $modelentity
- *   Optionally a modelentity or a modelentity type to check access for.
- *   If nothing is given, access for all modelentities is determined.
- * @param object $account
- *   The user to check for. Leave it to NULL to check for the global user.
- *
- * @return bool
- *   Whether access is allowed or not.
- */
-function modelentity_access($op, $modelentity = NULL, $account = NULL) {
-  if (user_access('administer modelentities', $account)) {
-    return TRUE;
-  }
-  if (is_object($modelentity) && $type_name = $modelentity->type) {
-    $op = ($op == 'view') ? 'view' : 'edit';
-    if (user_access("$op any $type_name modelentity", $account)) {
-      return TRUE;
-    }
-  }
-
-  return FALSE;
-}
-
-/**
- * Access callback for the entity API.
- */
-function modelentity_type_access($op, $type = NULL, $account = NULL) {
-  return user_access('administer modelentity types', $account);
-}
-
-/**
- * Gets an array of all modelentity types, keyed by the type name.
- *
- * @param string $type_name
- *   If set, the type with the given name is returned.
- *
- * @return ModelentityType[]
- *   Depending whether $type isset, an array of modelentity types
- *   or a single one.
- */
-function modelentity_get_types($type_name = NULL) {
-  // entity_load will get the Entity controller for our modelentity entity
-  // and call the load function of that object - we are loading entities
-  // by name here.
-  $types = entity_load_multiple_by_name('modelentity_type', isset($type_name) ? array($type_name) : FALSE);
-
-  return isset($type_name) ? reset($types) : $types;
-}
-
-/**
- * Menu argument loader; Load a modelentity type by string.
- *
- * @param string $type
- *   The machine-readable name of a modelentity type to load.
- *
- * @return array|bool
- *   A modelentity type array or FALSE if $type does not exist.
- */
-function modelentity_type_load($type) {
-  return modelentity_get_types($type);
-}
-
-/**
- * Fetch a modelentity object; make sure that the wildcard you choose
- * in the modelentity entity definition fits the function name here.
- *
- * @param int $modelentity_id
- *   Integer specifying the modelentity id.
- * @param bool $reset
- *   A boolean indicating that the internal cache should be reset.
- *
- * @return object|bool
- *   A fully-loaded $modelentity object or FALSE if it cannot be loaded.
- *
- * @see modelentity_load_multiple()
- */
-function modelentity_load($modelentity_id, $reset = FALSE) {
-  $modelentities = modelentity_load_multiple(array($modelentity_id), array(), $reset);
-
-  return reset($modelentities);
-}
-
-/**
- * Load multiple modelentities based on certain conditions.
- *
- * @param array $modelentity_ids
- *   An array of modelentity IDs.
- * @param array $conditions
- *   An array of conditions to match against the {modelentity} table.
- * @param bool $reset
- *   A boolean indicating that the internal cache should be reset.
- *
- * @return array
- *   An array of modelentity objects, indexed by modelentity_id.
- *
- * @see entity_load()
- * @see modelentity_load()
- */
-function modelentity_load_multiple($modelentity_ids = array(), $conditions = array(), $reset = FALSE) {
-  return entity_load('modelentity', $modelentity_ids, $conditions, $reset);
-}
-
-/**
- * Deletes a modelentity.
- *
- * @param \Modelentity $modelentity
- *   Entity model.
- */
-function modelentity_delete(Modelentity $modelentity) {
-  $modelentity->delete();
-}
-
-/**
- * Delete multiple modelentities.
- *
- * @param array $modelentity_ids
- *   An array of modelentity IDs.
- */
-function modelentity_delete_multiple(array $modelentity_ids) {
-  entity_get_controller('modelentity')->delete($modelentity_ids);
-}
-
-/**
- * Create a modelentity object.
- *
- * @param array $values
- *   An array of values.
- */
-function modelentity_create($values = array()) {
-  return entity_get_controller('modelentity')->create($values);
-}
-
-/**
- * Saves a modelentity to the database.
- *
- * @param \Modelentity $modelentity
- *   The modelentity object.
- */
-function modelentity_save(Modelentity $modelentity) {
-  return $modelentity->save();
-}
-
-/**
- * Saves a modelentity type to the db.
- *
- * @param \ModelentityType $type
- *   The modelentity type object.
- */
-function modelentity_type_save(ModelentityType $type) {
-  $type->save();
-}
-
-/**
- * Deletes a modelentity type from the db.
- *
- * @param \ModelentityType $type
- *   The modelentity type object.
- */
-function modelentity_type_delete(ModelentityType $type) {
-  $type->delete();
-}
-
-/**
- * URI callback for modelentities.
- *
- * @param \Modelentity $modelentity
- *   The modelentity object.
- *
- * @return array
- *   URI callback.
- */
-function modelentity_uri(Modelentity $modelentity) {
-  return array(
-    'path' => 'modelentity/' . $modelentity->modelentity_id,
-  );
-}
-
-/**
- * Menu title callback for showing individual entities.
- *
- * @param \Modelentity $modelentity
- *   The modelentity object.
- *
- * @return string
- *   Menu title.
- */
-function modelentity_page_title(Modelentity $modelentity) {
-  return $modelentity->name;
-}
-
-/**
- * Sets up content to show an individual modelentity.
- * @todo - get rid of drupal_set_title();
- *
- * @param \Modelentity $modelentity
- *   The modelentity object.
- * @param string $view_mode
- *   View mode.
- *
- * @return mixed
- *   Content.
- */
-function modelentity_page_view(Modelentity $modelentity, $view_mode = 'full') {
-  $controller = entity_get_controller('modelentity');
-  $content = $controller->view(array($modelentity->modelentity_id => $modelentity));
-  drupal_set_title($modelentity->name);
-
-  return $content;
-}
-
-if (class_exists('EntityInlineEntityFormController')) {
-  /**
-   * The Controller for Modelentity entities for Inline Entity Form.
-   *
-   * Class ModelentityInlineEntityFormController
-   */
-  class ModelentityInlineEntityFormController extends EntityInlineEntityFormController {
-
-  }
-}
-
+include_once 'includes/model_modelentity.include.inc';

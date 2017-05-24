@@ -2,21 +2,21 @@
 
 /**
  * @file
- * This field handler aggregates operations that can be done on a modelentity
+ * This field handler aggregates operations that can be done on a model_modelentity
  * under a single field providing a more flexible way to present them in a view
  */
 
 /**
- * Class modelentity_handler_modelentity_operations_field.
+ * Class model_modelentity_handler_model_modelentity_operations_field.
  */
-class modelentity_handler_modelentity_operations_field extends views_handler_field {
+class model_modelentity_handler_model_modelentity_operations_field extends views_handler_field {
   /**
    * Constructor.
    */
   public function construct() {
     parent::construct();
 
-    $this->additional_fields['modelentity_id'] = 'modelentity_id';
+    $this->additional_fields['model_modelentity_id'] = 'model_modelentity_id';
   }
 
   /**
@@ -40,9 +40,9 @@ class modelentity_handler_modelentity_operations_field extends views_handler_fie
    */
   public function render($values) {
     $links = menu_contextual_links(
-      'modelentity',
-      'admin/content/modelentities/modelentity',
-      array($this->get_value($values, 'modelentity_id'))
+      'model',
+      'model/modelentities',
+      array($this->get_value($values, 'model_modelentity_id'))
     );
 
     if (!empty($links)) {

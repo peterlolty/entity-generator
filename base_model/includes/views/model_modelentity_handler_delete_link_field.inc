@@ -7,9 +7,9 @@
  */
 
 /**
- * Class modelentity_handler_delete_link_field.
+ * Class model_modelentity_handler_delete_link_field.
  */
-class modelentity_handler_delete_link_field extends modelentity_handler_link_field {
+class model_modelentity_handler_delete_link_field extends model_modelentity_handler_link_field {
   /**
    * Constructor.
    */
@@ -30,15 +30,15 @@ class modelentity_handler_delete_link_field extends modelentity_handler_link_fie
   public function render($values) {
     $type = $values->{$this->aliases['type']};
 
-    // Creating a dummy modelentity to check access against.
-    $dummy_modelentity = (object) array('type' => $type);
-    if (!modelentity_access('edit', $dummy_modelentity)) {
+    // Creating a dummy model_modelentity to check access against.
+    /*$dummy_model_modelentity = (object) array('type' => $type);
+    if (!model_modelentity_access('delete', $dummy_model_modelentity)) {
       return;
-    }
+    }*/
 
     $text = !empty($this->options['text']) ? $this->options['text'] : t('delete');
-    $modelentity_id = $values->{$this->aliases['modelentity_id']};
+    $model_modelentity_id = $values->{$this->aliases['model_modelentity_id']};
 
-    return l($text, 'admin/content/modelentities/modelentity/' . $modelentity_id . '/delete');
+    return l($text, 'model/modelentities/' . $model_modelentity_id . '/delete');
   }
 }

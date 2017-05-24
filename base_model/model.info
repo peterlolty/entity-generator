@@ -1,21 +1,26 @@
 name = %NAME%
 description = %DESC%
 core = 7.x
-version = 7.x-1.0-beta1
+version = 7.x-1.0
 
 dependencies[] = entity
 dependencies[] = views
 ;dependencies[] = features
 
 files[] = %MD_NAME%.features.inc
+files[] = %MD_NAME%.views.inc
 files[] = %MD_NAME%.views_default.inc
-files[] = %MD_NAME%_%ENTITY_NAME%.admin.inc
-files[] = %MD_NAME%_%ENTITY_NAME%_type.admin.inc
+files[] = %MD_NAME%.menu.inc
+
+files[] = includes/%ENTITY_NAME%.include.inc
+files[] = includes/%ENTITY_NAME%.admin.inc
+files[] = includes/%ENTITY_NAME%_type.admin.inc
 files[] = includes/%ENTITY_CLASS%.inc
 files[] = includes/%ENTITY_CLASS%Controller.inc
+files[] = includes/%ENTITY_CLASS%MetadataController.inc
 files[] = includes/%ENTITY_CLASS%Type.inc
 files[] = includes/%ENTITY_CLASS%TypeController.inc
-files[] = includes/views/%MD_NAME%.views.inc
+files[] = includes/views/%ENTITY_NAME%.views_default.inc
 files[] = includes/views/%ENTITY_NAME%_handler_link_field.inc
 files[] = includes/views/%ENTITY_NAME%_handler_delete_link_field.inc
 files[] = includes/views/%ENTITY_NAME%_handler_edit_link_field.inc

@@ -7,16 +7,16 @@
  */
 
 /**
- * Class modelentity_handler_link_field
+ * Class model_modelentity_handler_link_field
  */
-class modelentity_handler_link_field extends views_handler_field {
+class model_modelentity_handler_link_field extends views_handler_field {
   /**
    * Constructor.
    */
   public function construct() {
     parent::construct();
 
-    $this->additional_fields['modelentity_id'] = 'modelentity_id';
+    $this->additional_fields['model_modelentity_id'] = 'model_modelentity_id';
     $this->additional_fields['type'] = 'type';
   }
 
@@ -71,8 +71,8 @@ class modelentity_handler_link_field extends views_handler_field {
    */
   public function render($values) {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('view');
-    $modelentity_id = $values->{$this->aliases['modelentity_id']};
+    $model_modelentity_id = $values->{$this->aliases['model_modelentity_id']};
 
-    return l($text, 'modelentity/' . $modelentity_id);
+    return l($text, 'model/modelentities/' . $model_modelentity_id);
   }
 }

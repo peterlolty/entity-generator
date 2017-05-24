@@ -17,31 +17,40 @@ class ModelentityController extends EntityAPIController {
   }
 
   /**
-   * Create a modelentity - we first set up the values that are specific
-   * to our modelentity schema but then also go through the EntityAPIController
+   * Create a model_modelentity - we first set up the values that are specific
+   * to our model_modelentity schema but then also go through the EntityAPIController
    * function.
    *
    * @param array $values
-   *   The values of the modelentity.
+   *   The values of the model_modelentity.
    *
    * @return object
-   *   A modelentity object with all default fields initialized.
+   *   A model_modelentity object with all default fields initialized.
    */
   public function create(array $values = array()) {
-    global $user;
     // Add values that are specific to our Modelentity.
     $values += array(
-      'modelentity_id' => '',
-      'uid'            => $user->uid,
+      'model_modelentity_id' => '',
+      'uid'            => 0,
       'is_new'         => TRUE,
-      'name'          => '',
-      'created'        => REQUEST_TIME,
+      'title'          => '',
+      'created'        => '',
       'changed'        => '',
     );
 
-    $modelentity = parent::create($values);
+    $model_modelentity = parent::create($values);
 
-    return $modelentity;
+    return $model_modelentity;
+  }
+
+  public function save($entity, DatabaseTransaction $transaction = NULL) {
+    global $user;
+    if(isset($entity->is_new) && $entity->is_new){
+      $entity->uid = $user->uid;
+      $entity->created = REQUEST_TIME;
+    }
+    $entity->changed = REQUEST_TIME;
+    parent::save($entity,$transaction);
   }
 
   /**

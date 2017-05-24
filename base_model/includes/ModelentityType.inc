@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class used for modelentity type entities
+ * The class used for model_modelentity type entities
  *
  * Class ModelentityType
  */
@@ -25,6 +25,6 @@ class ModelentityType extends Entity {
    * @throws \Exception
    */
   public function __construct($values = array()) {
-    parent::__construct($values, 'modelentity_type');
+    parent::__construct($values, 'model_modelentity_type');
   }
 }

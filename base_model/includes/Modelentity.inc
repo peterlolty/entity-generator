@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The class used for modelentity entities
+ * The class used for model_modelentity entities
  *
  * Class Modelentity
  */
@@ -15,11 +15,11 @@ class Modelentity extends Entity {
    * @throws \Exception
    */
   public function __construct($values = array()) {
-    parent::__construct($values, 'modelentity');
+    parent::__construct($values, 'model_modelentity');
   }
 
   /**
-   * Return modelentity label.
+   * Return model_modelentity label.
    *
    * @return string
    *   Label.
@@ -29,12 +29,12 @@ class Modelentity extends Entity {
   }
 
   /**
-   * Return modelentity URI.
+   * Return model_modelentity URI.
    *
    * @return array
    *   Uri.
    */
   protected function defaultUri() {
-    return array('path' => 'modelentity/' . $this->modelentity_id);
+    return array('path' => 'model/modelentities/' . $this->model_modelentity_id);
   }
 }

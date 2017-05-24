@@ -12,37 +12,37 @@
 function model_schema() {
   $schema = array();
 
-  $schema['modelentity'] = array(
-    'description' => 'The base table for modelentity entities.',
+  $schema['model_modelentity'] = array(
+    'description' => 'The base table for model_modelentity entities.',
     'fields'      => array(
-      'modelentity_id' => array(
-        'description' => 'Primary Key: Identifier for a modelentity.',
+      'model_modelentity_id' => array(
+        'description' => 'Primary Key: Identifier for a model_modelentity.',
         'type'        => 'serial',
         'unsigned'    => TRUE,
         'not null'    => TRUE,
       ),
       'type'           => array(
-        'description' => 'The {modelentity_type}.type of this modelentity.',
+        'description' => 'The {model_modelentity_type}.type of this model_modelentity.',
         'type'        => 'varchar',
         'length'      => 255,
         'not null'    => TRUE,
         'default'     => '',
       ),
       'name'           => array(
-        'description' => 'The name of the modelentity - a human-readable identifier.',
+        'description' => 'The name of the model_modelentity - a human-readable identifier.',
         'type'        => 'varchar',
         'length'      => 255,
         'not null'    => TRUE,
         'default'     => '',
       ),
       'created'        => array(
-        'description' => 'The Unix timestamp when the modelentity was created.',
+        'description' => 'The Unix timestamp when the model_modelentity was created.',
         'type'        => 'int',
         'not null'    => TRUE,
         'default'     => 0,
       ),
       'changed'        => array(
-        'description' => 'The Unix timestamp when the modelentity was most recently saved.',
+        'description' => 'The Unix timestamp when the model_modelentity was most recently saved.',
         'type'        => 'int',
         'not null'    => TRUE,
         'default'     => 0,
@@ -57,28 +57,28 @@ function model_schema() {
         ),
       ),
     ),
-    'primary key' => array('modelentity_id'),
+    'primary key' => array('model_modelentity_id'),
     'indexes'     => array(
       'type' => array('type'),
     ),
   );
 
-  $schema['modelentity_type'] = array(
-    'description' => 'Stores information about defined modelentity types.',
+  $schema['model_modelentity_type'] = array(
+    'description' => 'Stores information about defined model_modelentity types.',
     'fields'      => array(
       'id'     => array(
         'type'        => 'serial',
         'not null'    => TRUE,
-        'description' => 'Primary Key: Unique modelentity type identifier.',
+        'description' => 'Primary Key: Unique model_modelentity type identifier.',
       ),
       'type'   => array(
-        'description' => 'The machine-readable name of this modelentity type.',
+        'description' => 'The machine-readable name of this model_modelentity type.',
         'type'        => 'varchar',
         'length'      => 255,
         'not null'    => TRUE,
       ),
       'label'  => array(
-        'description' => 'The human-readable name of this modelentity type.',
+        'description' => 'The human-readable name of this model_modelentity type.',
         'type'        => 'varchar',
         'length'      => 255,
         'not null'    => TRUE,
@@ -89,7 +89,7 @@ function model_schema() {
         'not null'    => TRUE,
         'default'     => 0,
         'size'        => 'tiny',
-        'description' => 'The weight of this modelentity type in relation to others.',
+        'description' => 'The weight of this model_modelentity type in relation to others.',
       ),
     ) + entity_exportable_schema_fields(),
     'primary key' => array('id'),

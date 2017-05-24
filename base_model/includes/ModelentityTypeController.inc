@@ -17,15 +17,15 @@ class ModelentityTypeController extends EntityAPIControllerExportable {
   }
 
   /**
-   * Create a modelentity type - we first set up the values that are specific
-   * to our modelentity type schema but then also go through
+   * Create a model_modelentity type - we first set up the values that are specific
+   * to our model_modelentity type schema but then also go through
    * the EntityAPIController function.
    *
    * @param array $values
-   *   The values of the modelentity.
+   *   The values of the model_modelentity.
    *
    * @return bool
-   *   A modelentity type object with all default fields initialized.
+   *   A model_modelentity type object with all default fields initialized.
    */
   public function create(array $values = array()) {
     // Add values that are specific to our Modelentity.
@@ -33,8 +33,8 @@ class ModelentityTypeController extends EntityAPIControllerExportable {
       'id'     => '',
       'is_new' => TRUE,
     );
-    $modelentity_type = parent::create($values);
+    $model_modelentity_type = parent::create($values);
 
-    return $modelentity_type;
+    return $model_modelentity_type;
   }
 }

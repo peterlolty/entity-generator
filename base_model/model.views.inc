@@ -10,14 +10,14 @@
  */
 function model_views_data_alter(&$data) {
 
-  $data['modelentity']['table']['join'] = array(
+  $data['model_modelentity']['table']['join'] = array(
     'users' => array(
       'left_field' => 'uid',
       'field'      => 'uid',
     ),
   );
 
-  $data['modelentity']['uid'] = array(
+  $data['model_modelentity']['uid'] = array(
     'title'        => t('User ID'),
     'help'         => t('The author ID'),
     'relationship' => array(
@@ -26,9 +26,9 @@ function model_views_data_alter(&$data) {
       // The name of the field on the joined table.
       'base field' => 'uid',
       'handler'    => 'views_handler_relationship',
-      'label'      => t('Author ID of the modelentity (relationship)'),
+      'label'      => t('Author ID of the ELabel (relationship)'),
       'title'      => t('Author ID'),
-      'help'       => t('Author of the modelentity (relationship)'),
+      'help'       => t('Author of the ELabel (relationship)'),
     ),
     'field'        => array('handler' => 'views_handler_field_numeric', 'click sortable' => TRUE),
     'filter'       => array('handler' => 'views_handler_filter_numeric'),
@@ -36,39 +36,39 @@ function model_views_data_alter(&$data) {
     'argument'     => array('handler' => 'views_handler_argument_numeric'),
   );
 
-  $data['modelentity']['link_modelentity'] = array(
+  $data['model_modelentity']['link_model_modelentity'] = array(
     'field' => array(
       'title'   => t('Link'),
-      'help'    => t('Provide a link to the modelentity.'),
-      'handler' => 'modelentity_handler_link_field',
+      'help'    => t('Provide a link to the model_modelentity.'),
+      'handler' => 'model_modelentity_handler_link_field',
     ),
   );
-  $data['modelentity']['edit_modelentity'] = array(
+  $data['model_modelentity']['edit_model_modelentity'] = array(
     'field' => array(
       'title'   => t('Edit Link'),
-      'help'    => t('Provide a link to the edit form for the modelentity.'),
-      'handler' => 'modelentity_handler_edit_link_field',
+      'help'    => t('Provide a link to the edit form for the model_modelentity.'),
+      'handler' => 'model_modelentity_handler_edit_link_field',
     ),
   );
-  $data['modelentity']['delete_modelentity'] = array(
+  $data['model_modelentity']['delete_model_modelentity'] = array(
     'field' => array(
       'title'   => t('Delete Link'),
-      'help'    => t('Provide a link to delete the modelentity.'),
-      'handler' => 'modelentity_handler_delete_link_field',
+      'help'    => t('Provide a link to delete the model_modelentity.'),
+      'handler' => 'model_modelentity_handler_delete_link_field',
     ),
   );
 
   // This content of this field are decided based on the menu structure that
-  // follows modelentities/modelentity/%modelentity_id/op
-  $data['modelentity']['operations'] = array(
+  // follows model/modelentities/%model_modelentity_id/op
+  $data['model_modelentity']['operations'] = array(
     'field' => array(
       'title'   => t('Operations links'),
-      'help'    => t('Display all operations available for this modelentity.'),
-      'handler' => 'modelentity_handler_modelentity_operations_field',
+      'help'    => t('Display all operations available for this model_modelentity.'),
+      'handler' => 'model_modelentity_handler_model_modelentity_operations_field',
     ),
   );
 
-  $data['modelentity']['created'] = array(
+  $data['model_modelentity']['created'] = array(
     'title'  => t('Created'),
     'help'   => t('Creation date'),
     'field'  => array(
@@ -83,7 +83,7 @@ function model_views_data_alter(&$data) {
     ),
   );
 
-  $data['modelentity']['changed'] = array(
+  $data['model_modelentity']['changed'] = array(
     'title'  => t('Changed'),
     'help'   => t('Last modification date'),
     'field'  => array(

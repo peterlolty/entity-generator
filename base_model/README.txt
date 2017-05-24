@@ -23,7 +23,7 @@ Installation
 Once you activate the module it sets up an entity administration interface under
 Admnistration > Structure > Modelentity Types
 
-You can add modelentity entities via Administration > Content > Modelentities
+You can add model_modelentity entities via Administration > Content > Modelentities
 
 Keep in mind that you need to create some Modelentity Types before you can add
 entities.
@@ -43,8 +43,8 @@ so via a drush script we can get all the code ready to go.
 Customising your entities in 5 simple steps.
 --------------------------------------------
 1. Search and replace in all files:
-- "modelentity" by the name of your entity (and "Modelentity" and the plural
-forms "modelentities" and "Modelentities")
+- "model_modelentity" by the name of your entity (and "Modelentity" and the plural
+forms "model_modelentities" and "Modelentities")
 - "model" by the name of your module (and "Model" with uppercase)
 
 2. Rename all files of the module as in the first step
@@ -66,13 +66,13 @@ in model.module.
 
 Currently, I am overwriting the create function to add some extra info. If you
 stick to the $data variable and save extra data in serialized form (and not
-adding new columns to your table)  - just like the modelentity entity does with
+adding new columns to your table)  - just like the model_modelentity entity does with
 the checkbox - there is nothing else you need to do. If you have added new
-columns you need to add support for them in $modelentity->create but not
-necessarily $modelentity->save unless you are doing something specific.
+columns you need to add support for them in $model_modelentity->create but not
+necessarily $model_modelentity->save unless you are doing something specific.
 
 5. Finally you can play around within the theming for your entity by looking
-into modelentity.tpl.php and modelentity-sample-data.tpl.php
+into model_modelentity.tpl.php and model_modelentity-sample-data.tpl.php
 
 
 
